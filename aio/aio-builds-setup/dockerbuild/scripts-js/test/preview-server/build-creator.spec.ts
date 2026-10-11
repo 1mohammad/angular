@@ -17,7 +17,11 @@ describe('BuildCreator', () => {
   const shortSha = sha.substr(0, SHORT_SHA_LEN);
   const archive = 'snapshot.tar.gz';
   const buildsDir = 'builds/dir';
-  const hiddenPrDir = path.join(buildsDir, `hidden--${pr}`);
+  const hiddenPrDir = path.resolve(buildsDir, `hidden--${pr}`);
+  const resolvedBuildsDir = path.resolve(buildsDir);
+  if (hiddenPrDir !== resolvedBuildsDir && !hiddenPrDir.startsWith(resolvedBuildsDir + path.sep)) {
+    throw new Error('Invalid path');
+  }
   const publicPrDir = path.join(buildsDir, `${pr}`);
   const hiddenShaDir = path.join(hiddenPrDir, shortSha);
   const publicShaDir = path.join(publicPrDir, shortSha);
