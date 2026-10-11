@@ -49,7 +49,7 @@ import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing'
           stack
               .split('\n')
               // e.g. at View_MyComp_0 (ng:///DynamicTestModule/MyComp.ngfactory.js:153:40)
-              .map(line => /\((.*\.ngfactory\.js):(\d+):(\d+)/.exec(line))
+              .map(line => line.match(/\(([\w:/.]+\.ngfactory\.js):(\d+):(\d+)/))
               .filter(match => !!match)
               .map(match => ({
                      file: match ![1],
