@@ -267,11 +267,18 @@ class StackblitzBuilder {
     var includeSpec = false;
     var gpaths = config.files.map(function(fileName) {
       fileName = fileName.trim();
-      if (fileName.substr(0,1) == '!') {
-        return '!' + path.join(config.basePath, fileName.substr(1));
+      var isExclude = fileName.substr(0,1) == '!';
+      var relativeName = isExclude ? fileName.substr(1) : fileName;
+      var resolvedBase = path.resolve(config.basePath);
+      var resolvedPath = path.resolve(config.basePath, relativeName);
+      if (resolvedPath !== resolvedBase && resolvedPath.indexOf(resolvedBase + '/') !== 0) {
+        throw new Error('Invalid path in stackblitz config files: ' + fileName);
+      }
+      if (isExclude) {
+        return '!' + path.join(config.basePath, relativeName);
       } else {
         includeSpec = includeSpec || /\.spec\.(ts|js)$/.test(fileName);
-        return path.join(config.basePath, fileName);
+        return path.join(config.basePath, relativeName);
       }
     });
 
