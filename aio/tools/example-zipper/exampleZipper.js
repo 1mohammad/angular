@@ -82,6 +82,11 @@ class ExampleZipper {
 
     const exampleDirName = path.dirname(configFileName);
     const outputFileName = path.join(outputDirName, relativeDirName, exampleZipName + '.zip');
+    const resolvedOutputFile = path.resolve(outputFileName);
+    const resolvedOutputDir = path.resolve(outputDirName);
+    if (resolvedOutputFile !== resolvedOutputDir && !resolvedOutputFile.startsWith(resolvedOutputDir + path.sep)) {
+      throw new Error('Invalid output path: path traversal detected');
+    }
     let defaultIncludes = ['**/*.ts', '**/*.js', '**/*.es6', '**/*.css', '**/*.html', '**/*.md', '**/*.json', '**/*.png'];
     let alwaysIncludes = [
       'bs-config.json',
