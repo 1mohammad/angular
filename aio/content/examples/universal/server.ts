@@ -39,6 +39,9 @@ app.set('views', join(DIST_FOLDER, 'browser'));
 // #docregion data-request
 // TODO: implement data requests securely
 app.get('/api/*', (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send('Unauthorized');
+  }
   res.status(404).send('data requests are not supported');
 });
 // #enddocregion data-request
