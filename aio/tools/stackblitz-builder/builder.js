@@ -268,7 +268,12 @@ class StackblitzBuilder {
     var gpaths = config.files.map(function(fileName) {
       fileName = fileName.trim();
       if (fileName.substr(0,1) == '!') {
-        return '!' + path.join(config.basePath, fileName.substr(1));
+        var excludePath = path.join(config.basePath, fileName.substr(1));
+        var relativeExclude = path.relative(config.basePath, excludePath);
+        if (relativeExclude.startsWith('..') || path.isAbsolute(relativeExclude)) {
+          throw new Error('Path traversal detected in stackblitz config files');
+        }
+        return '!' + excludePath;
       } else {
         includeSpec = includeSpec || /\.spec\.(ts|js)$/.test(fileName);
         return path.join(config.basePath, fileName);
