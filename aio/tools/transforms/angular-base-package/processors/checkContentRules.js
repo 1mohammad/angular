@@ -12,7 +12,7 @@
  *
  * ```
  * function noMarkdownHeadings(doc, prop, value) {
- *   const match = /^\s?#+\s+.*$/m.exec(value);
+ *   const match = value.match(/^\s?#+\s+.*$/m);
  *   if (match) {
  *     return `Headings not allowed in "${prop}" property. Found "${match[0]}"`;
  *   }
