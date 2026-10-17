@@ -17,11 +17,10 @@ function execBuild(done, args = '') {
   const path = require('path');
   const childProcess = require('child_process');
   // increase maxbuffer to address out of memory exception when running certain tasks
-  const buildScript = path.resolve(__dirname, '../../build.sh');
-  const allowedDir = path.resolve(__dirname, '../..');
-  const relative = path.relative(allowedDir, buildScript);
-  if (relative.startsWith('..') || path.isAbsolute(relative)) {
-    throw new Error('Invalid build script path');
+  const scriptPath = path.resolve(__dirname, '../../build.sh');
+  const baseDir = path.resolve(__dirname, '../..');
+  if (!scriptPath.startsWith(baseDir + path.sep)) {
+    throw new Error('Invalid path');
   }
-  childProcess.exec(`${buildScript} ${args}`, {maxBuffer: 300 * 1024}, done);
+  childProcess.execFile(scriptPath, args ? args.trim().split(/\s+/).filter(Boolean) : [], {maxBuffer: 300 * 1024}, done);
 }
